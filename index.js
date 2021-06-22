@@ -1,4 +1,4 @@
-const CONSTANTS = require('./includes/constants');
+const CONSTANTS = require('./includes/utilities/constants');
 const PROMPT = require('./includes/prompt');
 const PUPPETEER = require('puppeteer');
 
