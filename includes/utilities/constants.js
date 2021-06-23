@@ -6,27 +6,28 @@ module.exports = {
    * @param { Number } NOT_ADDED
    * @returns { string }
    */
-  DUPLICATES_NOT_ADDED: (NOT_ADDED) => `${NOT_ADDED} duplicates not added`,
+  DUPLICATES_NOT_ADDED: NOT_ADDED => `${NOT_ADDED} duplicates not added`,
   /**
    * @param { Number } ADDED
    * @returns { string }
    */
-  URLS_ADDED: (ADDED) => `${ADDED} URLs added`,
+  URLS_ADDED: ADDED => `${ADDED} URLs added`,
   /**
    * @param { Number } TOTAL
    * @returns { string }
    */
-  TOTAL_URLS: (TOTAL) => `${TOTAL} total URLs`,
+  TOTAL_URLS: TOTAL => `${TOTAL} total URLs`,
   /**
    * @param { string[] } URLS
    * @returns { string }
    */
-  LIST_URLS: (URLS) =>
+  LIST_URLS: URLS =>
     `The following URLs will now be processed:\n- ${URLS.join("\n- ")}`,
   COLORS: {
     RED: "\x1b[31m",
     GREEN: "\x1b[32m",
     BLUE: "\x1b[36m",
-    RESET: "\x1b[0m",
-  },
+    YELLOW: "\x1b[33m",
+    RESET: "\x1b[0m"
+  }
 };
