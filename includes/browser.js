@@ -1,11 +1,19 @@
+/**
+ * This is a function that runs a script that
+ * creates directories as necessary, navigates to pages
+ * specified by the user, takes screenshots and saves them
+ *
+ * @todo Refactor filesystem events out of this class
+ * @todo Refactor both directory creation functions into one
+ */
 module.exports = {
   /**
-   * @var _puppeteer Puppeteer library
-   * @var _filesystem FS Library
+   * Required modules
    */
+  _constants: require("./utilities/constants"),
+  _errors: require("./utilities/errors"),
   _puppeteer: require("puppeteer"),
   _filesystem: require("fs"),
-  _constants: require("./utilities/constants"),
   /**
    * @private
    * @return { string } Directory name
@@ -16,7 +24,7 @@ module.exports = {
     this._filesystem.mkdir(_directory, _ERROR => {
       if (_ERROR) {
         throw new Error(
-          `There was an error creating a directory <./${_directory}/>: ${_ERROR}`
+          this._errors.CREATING_DIRECTORY(_ERROR, `./${_directory}/`)
         );
       }
     });
@@ -34,7 +42,7 @@ module.exports = {
     this._filesystem.mkdir(_directory, function (_ERROR) {
       if (_ERROR) {
         throw new Error(
-          `There was an error creating a directory <./${_directory}/>: ${_ERROR}`
+          this._errors.CREATING_DIRECTORY(_ERROR, `./${_directory}/`)
         );
       }
     });
@@ -45,22 +53,50 @@ module.exports = {
    */
   _initBrowser: async function () {
     return new Promise(async resolve => {
-      const browser = await this._puppeteer.launch();
+      const browser = await this._puppeteer.launch({ headless: false });
       return resolve(browser);
     });
   },
   /**
    * @private
    * @async
+   * @param { Object } BROWSER
    * @param { string } URL
+   * @param { Object } RULES
    * @param { {}[] } DEVICES
    * @param { string } OUTPUT_DIRECTORY
-   * @param { Object } BROWSER
    * @return { Number } Number of screenshots taken
    */
-  _initPage: async function (URL, DEVICES, OUTPUT_DIRECTORY, BROWSER) {
+  _initPage: async function (BROWSER, URL, RULES, DEVICES, OUTPUT_DIRECTORY) {
     const _page = await BROWSER.newPage();
-    await _page.goto(URL, { waitUntil: "load", timeout: 0 });
+    await _page.goto(URL);
+    if (RULES?.scrollToBottom) {
+      await _page.evaluate(() => {
+        return new Promise(resolve => {
+          const _scrollPage = setInterval(() => {
+            window.scrollTo(0, window.scrollY + 100);
+            dispatchEvent(new Event("scroll", { bubbles: true }));
+          }, 100);
+          window.addEventListener("scroll", () => {
+            if (
+              window.innerHeight + window.scrollY >=
+              document.body.offsetHeight
+            ) {
+              clearInterval(_scrollPage);
+              window.scrollTo(0, 0);
+              resolve(true);
+            }
+          });
+        });
+      });
+    }
+    if (RULES?.elementsToRemove?.length) {
+      await _page.evaluate(() => {
+        Array.from(document.querySelectorAll(".ReactModalPortal")).forEach(
+          element => element.remove()
+        );
+      });
+    }
     for (const _device of DEVICES) {
       await _page.setViewport({
         width: _device.width,
@@ -98,7 +134,7 @@ module.exports = {
    * @param { string[] } URLS
    * @return { Number } Number of screenshots taken
    */
-  execute: async function (DEVICES, URLS) {
+  run: async function (DEVICES, URLS) {
     const _browser = await this._initBrowser();
     const _directory = this._createProjectDirectory();
     let _screenshotsTaken = 0;

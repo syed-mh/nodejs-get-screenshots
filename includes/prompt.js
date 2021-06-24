@@ -3,49 +3,72 @@
  * that asks the user to input URLS to analyze.
  *
  * @todo add validation to see if something is actually a URL
- * @param { boolean } VALIDATE
- * @return { string[] } Array of trimmed urls
+ * @todo Refactor settings prompts and URL prompts into their own classes
  */
-module.exports = VALIDATE => {
+module.exports = {
   /**
-   * @const { {} } CONSTANTS Object containing app-wide string constants
-   * @const { module } prompt prompt-async library
-   * @var { string[] } _urls  An array containing string urls to be processed
-   * @var { string } _input A string entered by a user containing a url or comma separated urls
-   * @var { string[] } _add Array of URLs to add
-   * @var { Number } _added The number of URLs added
-   * @var { Number } _voided The number of URLs not added
-   * @var { Number } _total The total number of URLs that is going to be processed
+   * Required modules
    */
-  const CONSTANTS = require("./utilities/constants");
-  const PROMPT = require("prompt-sync")({ sigint: true });
-  let _urls = new Array();
-  let _input, _add, _added, _voided, _total;
-
-  do {
-    console.log(
-      CONSTANTS.COLORS.BLUE,
-      _urls.length ? CONSTANTS.ENTER_URL : CONSTANTS.ENTER_ANOTHER_URL,
-      CONSTANTS.COLORS.RESET
-    );
-    _input = PROMPT()
-      .split(",")
-      .map(_url => _url.trim());
-    _add = _input.filter(_url => !_urls.includes(_url) && _url);
-    _added = _add.length;
-    _voided = _input.length ? 0 : _input.length - _added;
-    _urls = [..._urls, ..._add];
-    _total = _urls.length;
-    console.log(
-      CONSTANTS.COLORS.GREEN,
-      CONSTANTS.URLS_ADDED(_added),
-      CONSTANTS.COLORS.GREEN,
-      CONSTANTS.TOTAL_URLS(_total),
-      CONSTANTS.COLORS.RED,
-      CONSTANTS.DUPLICATES_NOT_ADDED(_voided),
-      CONSTANTS.COLORS.RESET
-    );
-  } while (_input.join("") !== "");
-
-  return _urls;
+  _constants: require("./utilities/constants"),
+  _errors: require("./utilities/errors"),
+  _prompt: require("prompt-sync")({ sigint: true }),
+  _fs: require("fs"),
+  /**
+   *
+   * @returns
+   */
+  _initSettingsDirectory: function () {
+    const _settingsDirectory = _this._constants.DEFAULT_SETTINGS_DIRECTORY;
+    try {
+      if (!this._fs.existsSync(_settingsDirectory)) {
+        this._fs.mkdirSync(_settingsDirectory);
+      }
+      return _settingsDirectory;
+    } catch (_ERROR) {
+      throw new Error(
+        this._errors.CREATING_DIRECTORY(_ERROR, _settingsDirectory)
+      );
+    }
+  },
+  /**
+   *
+   */
+  _initSettingsFile: function () {},
+  /**
+   *
+   */
+  _readSettings: function (PRESET = false) {
+    _settings = this._constants.DEFAULT_SETTINGS;
+    if (PRESET) {
+      try {
+        const _settingsFile = `${
+          this._constants.DEFAULT_SETTINGS_DIRECTORY
+        }/${PRESET.toLowerCase()}.json`;
+        _settings = JSON.parse(
+          JSON.stringify(this._fs.readFileSync(_settingsFile))
+        );
+      } catch (_ERROR) {
+        throw new Error(
+          this._errors.CREATING_FILE(_ERROR, `${_settingsFile}.json`)
+        );
+      }
+    }
+    return _settings;
+  },
+  /**
+   *
+   */
+  _promptSettings: function () {},
+  /**
+   *
+   */
+  _promptURLs: function () {},
+  /**
+   *
+   */
+  run: function () {},
+  /**
+   *
+   */
+  createSettings: function () {}
 };

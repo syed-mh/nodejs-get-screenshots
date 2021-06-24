@@ -23,6 +23,11 @@ module.exports = {
    */
   LIST_URLS: URLS =>
     `The following URLs will now be processed:\n- ${URLS.join("\n- ")}`,
+  DEFAULT_SETTINGS_DIRECTORY: "./settings",
+  DEFAULT_SETTINGS: {
+    SCROLL_TO_BOTTOM: false,
+    ELEMENTS_TO_REMOVE: []
+  },
   COLORS: {
     RED: "\x1b[31m",
     GREEN: "\x1b[32m",
