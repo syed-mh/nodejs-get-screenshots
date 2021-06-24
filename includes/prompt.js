@@ -6,7 +6,7 @@
  * @param { boolean } VALIDATE
  * @return { string[] } Array of trimmed urls
  */
-module.exports = (VALIDATE) => {
+module.exports = VALIDATE => {
   /**
    * @const { {} } CONSTANTS Object containing app-wide string constants
    * @const { module } prompt prompt-async library
@@ -25,13 +25,13 @@ module.exports = (VALIDATE) => {
   do {
     console.log(
       CONSTANTS.COLORS.BLUE,
-      _urls.length ? CONSTANTS.ENTER_ANOTHER_URL : CONSTANTS.ENTER_URL,
+      _urls.length ? CONSTANTS.ENTER_URL : CONSTANTS.ENTER_ANOTHER_URL,
       CONSTANTS.COLORS.RESET
     );
     _input = PROMPT()
       .split(",")
-      .map((_url) => _url.trim());
-    _add = _input.filter((_url) => !_urls.includes(_url) && _url);
+      .map(_url => _url.trim());
+    _add = _input.filter(_url => !_urls.includes(_url) && _url);
     _added = _add.length;
     _voided = _input.length - _added;
     _total = _urls.length;
