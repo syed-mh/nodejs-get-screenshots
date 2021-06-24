@@ -13,7 +13,7 @@ module.exports = {
   _createProjectDirectory: function () {
     const _date = new Date();
     const _directory = `${_date.getDate()}-${_date.getMonth()}-${_date.getFullYear()}__${_date.getHours()}-${_date.getMinutes()}-${_date.getSeconds()}`;
-    this._filesystem.mkdir(_directory, _ERROR => {
+    this._filesystem.mkdir(_directory, (_ERROR) => {
       if (_ERROR) {
         throw new Error(
           `There was an error creating a directory <./${_directory}/>: ${_ERROR}`
@@ -55,15 +55,15 @@ module.exports = {
     for (const _device of DEVICES) {
       await _page.setViewport({
         width: _device.width,
-        height: _device.height
+        height: _device.height,
       });
       await _page.screenshot({
-        path: `${OUTPUT_DIRECTORY}/${_device.name}-fold.png`,
-        fullPage: false
+        path: `${OUTPUT_DIRECTORY}/${_device.width}x${_device.height}-fold.png`,
+        fullPage: false,
       });
       await _page.screenshot({
-        path: `${OUTPUT_DIRECTORY}/${_device.name}-full.png`,
-        fullPage: true
+        path: `${OUTPUT_DIRECTORY}/${_device.width}x${_device.height}-full.png`,
+        fullPage: true,
       });
     }
     await _page.close();
@@ -101,5 +101,5 @@ module.exports = {
     }
     this._successPrompt(_screenshotsTaken);
     return _screenshotsTaken;
-  }
+  },
 };
