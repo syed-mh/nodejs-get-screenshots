@@ -33,7 +33,7 @@ module.exports = VALIDATE => {
       .map(_url => _url.trim());
     _add = _input.filter(_url => !_urls.includes(_url) && _url);
     _added = _add.length;
-    _voided = _input.length - _added;
+    _voided = _input.length ? 0 : _input.length - _added;
     _urls = [..._urls, ..._add];
     _total = _urls.length;
     console.log(
