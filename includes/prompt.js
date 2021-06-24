@@ -34,8 +34,8 @@ module.exports = VALIDATE => {
     _add = _input.filter(_url => !_urls.includes(_url) && _url);
     _added = _add.length;
     _voided = _input.length - _added;
-    _total = _urls.length;
     _urls = [..._urls, ..._add];
+    _total = _urls.length;
     console.log(
       CONSTANTS.COLORS.GREEN,
       CONSTANTS.URLS_ADDED(_added),
