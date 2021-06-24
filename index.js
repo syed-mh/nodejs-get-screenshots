@@ -4,6 +4,6 @@ const PROMPT = require("./includes/prompt");
 const BROWSER = require("./includes/browser");
 
 const URLS = PROMPT(true);
-console.log(CONSTANTS.LIST_URLS(URLS));
+console.log(CONSTANTS.LIST_URLS(URLS), "\n\n");
 
 BROWSER.execute(VIEWPORTS, URLS);
