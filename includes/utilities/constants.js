@@ -1,7 +1,7 @@
 module.exports = {
   ENTER_URL:
     "Enter another URL or a comma separated string of URLs to use, or press enter to finish adding domains:",
-  ENTER_ANOTHER_URL: "Enter a url or a comma seperated string of URLs to use:",
+  ENTER_ANOTHER_URL: "Enter a URL or a comma seperated string of URLs to use:",
   /**
    * @param { Number } NOT_ADDED
    * @returns { string }
