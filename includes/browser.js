@@ -146,10 +146,11 @@ module.exports = {
         this._constants.COLORS.RESET
       );
       _screenshotsTaken += await this._initPage(
+        _browser,
         _url,
+        undefined,
         DEVICES,
-        _urlDirectory,
-        _browser
+        _urlDirectory
       );
     }
     await _browser.close();
